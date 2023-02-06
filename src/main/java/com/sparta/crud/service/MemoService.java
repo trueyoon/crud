@@ -2,12 +2,14 @@ package com.sparta.crud.service;
 
 
 import com.sparta.crud.dto.MemoRequestDto;
+import com.sparta.crud.dto.MemoResponseDto;
 import com.sparta.crud.entity.Memo;
 import com.sparta.crud.repository.MemoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,6 +18,13 @@ public class MemoService {
 
     private final MemoRepository memoRepository;
 
+/*    @Transactional
+    public Memo createMemo(MemoRequestDto requestDto) {
+        Memo memo = new Memo(requestDto);
+        memoRepository.save(memo);
+        return memo;
+    }*/
+
     @Transactional
     public Memo createMemo(MemoRequestDto requestDto) {
         Memo memo = new Memo(requestDto);
@@ -23,9 +32,19 @@ public class MemoService {
         return memo;
     }
 
+//    @Transactional(readOnly = true)
+//    public List<Memo> getMemos() {
+//        return memoRepository.findAllByOrderByModifiedAtDesc();
+//    }
+
     @Transactional(readOnly = true)
-    public List<Memo> getMemos() {
-        return memoRepository.findAllByOrderByModifiedAtDesc();
+    public List<MemoResponseDto> getMemos() {
+        List<Memo> memos = memoRepository.findAllByOrderByModifiedAtDesc();
+        List<MemoResponseDto> memoResponseDtos = new ArrayList<>();
+        for (Memo memo : memos) {
+            memoResponseDtos.add(new MemoResponseDto(memo));
+        }
+        return memoResponseDtos;
     }
 
     @Transactional

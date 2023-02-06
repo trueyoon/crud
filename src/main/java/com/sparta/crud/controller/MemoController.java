@@ -1,6 +1,7 @@
 package com.sparta.crud.controller;
 
 import com.sparta.crud.dto.MemoRequestDto;
+import com.sparta.crud.dto.MemoResponseDto;
 import com.sparta.crud.entity.Memo;
 import com.sparta.crud.service.MemoService;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ public class MemoController {
     }
 
     @GetMapping("/api/memos")
-    public List<Memo> getMemos() {
+    public List<MemoResponseDto> getMemos() {
         return memoService.getMemos();
     }
 
