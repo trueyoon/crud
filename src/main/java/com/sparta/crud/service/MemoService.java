@@ -47,6 +47,12 @@ public class MemoService {
         return memoResponseDtos;
     }
 
+    @Transactional(readOnly = true)
+    public Memo getMemoById(Long id) {
+        return memoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Memo not found with id: " + id));
+    }
+
     @Transactional
     public Long update(Long id, MemoRequestDto requestDto) {
         Memo memo = memoRepository.findById(id).orElseThrow(

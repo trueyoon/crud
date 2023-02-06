@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.time.LocalDateTime;
 
 @Getter
 public class MemoResponseDto {
@@ -20,11 +21,16 @@ public class MemoResponseDto {
     private String title;
     @Column(nullable = false)
     private String nickName;
+    private LocalDateTime createdAt;
+
+
+
 
     public MemoResponseDto(Memo memo) {
         //this.username = memo.getUsername();
-        this.contents = memo.getContents();
-        this.nickName = memo.getNickName();
         this.title = memo.getTitle();
+        this.nickName = memo.getNickName();
+        this.contents = memo.getContents();
+        this.createdAt = memo.getCreatedAt();
     }
 }

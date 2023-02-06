@@ -5,6 +5,7 @@ import com.sparta.crud.dto.MemoResponseDto;
 import com.sparta.crud.entity.Memo;
 import com.sparta.crud.service.MemoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -39,5 +40,14 @@ public class MemoController {
     @DeleteMapping("/api/memos/{id}")
     public Long deleteMemo(@PathVariable Long id){
         return memoService.deleteMemo(id);
+    }
+
+
+
+    //id값에 해당하는 게시글만 출력됨 .
+    @GetMapping("/api/memos/{id}")
+    public ResponseEntity<MemoResponseDto> getMemo(@PathVariable Long id) {
+        Memo memo = memoService.getMemoById(id);
+        return ResponseEntity.ok(new MemoResponseDto(memo));
     }
 }
