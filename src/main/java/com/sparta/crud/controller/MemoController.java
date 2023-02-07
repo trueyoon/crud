@@ -53,19 +53,19 @@ public class MemoController {
 //        Long updatedMemoId = memoService.update(id, requestDto);
 //        return new ResponseEntity<>(updatedMemoId, HttpStatus.OK);
 //    }
-@PutMapping("/api/memos/{id}")
-public ResponseEntity<Long> updateMemo(@PathVariable Long id, @RequestBody MemoRequestDto requestDto) {
-    Memo memo = memoRepository.findById(id).orElse(null);
-    if (memo == null) {
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    @PutMapping("/api/memos/{id}")
+    public ResponseEntity<Long> updateMemo(@PathVariable Long id, @RequestBody MemoRequestDto requestDto) {
+        Memo memo = memoRepository.findById(id).orElse(null);
+        if (memo == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        if (!memo.getPassword().equals(requestDto.getPassword())) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        Long updatedMemoId = memoService.update(id, requestDto);
+        return new ResponseEntity<>(updatedMemoId, HttpStatus.OK);
     }
-    if (!memo.getPassword().equals(requestDto.getPassword())) {
-        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-    }
-    Long updatedMemoId = memoService.update(id, requestDto);
-    return new ResponseEntity<>(updatedMemoId, HttpStatus.OK);
-}
-
+    정
 
 
     @DeleteMapping("/api/memos/{id}")
