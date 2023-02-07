@@ -1,6 +1,7 @@
 package com.sparta.crud.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.sparta.crud.entity.Memo;
 import lombok.Getter;
 
@@ -11,6 +12,7 @@ import javax.persistence.Id;
 import java.time.LocalDateTime;
 
 @Getter
+@JsonPropertyOrder({"title", "nickName", "createdAt", "contents" })
 public class MemoResponseDto {
 
     /*@Column(nullable = false)

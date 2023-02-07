@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface MemoRepository extends JpaRepository<Memo, Long> { //db와 연결
     List<Memo> findAllByOrderByModifiedAtDesc();
+    List<Memo> findById(int id);
 }

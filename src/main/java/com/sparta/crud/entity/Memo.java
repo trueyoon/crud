@@ -15,8 +15,8 @@ public class Memo extends Timestamped {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(nullable = false)
-    private String username;
+    /*@Column(nullable = false)
+    private String username;*/
     @Column(nullable = false)
     private String contents;
     @Column(nullable = false)
@@ -27,7 +27,7 @@ public class Memo extends Timestamped {
     private String nickName;
 
     public Memo(MemoRequestDto requestDto) {
-        this.username = requestDto.getUsername();
+        //this.username = requestDto.getUsername();
         this.contents = requestDto.getContents();
         this.nickName = requestDto.getNickName();
         this.password = requestDto.getPassword();
@@ -35,7 +35,7 @@ public class Memo extends Timestamped {
     }
 
     public void update(MemoRequestDto requestDto) {
-        this.username = requestDto.getUsername();
+        //this.username = requestDto.getUsername();
         this.contents = requestDto.getContents();
         this.nickName = requestDto.getNickName();
         this.password = requestDto.getPassword();
