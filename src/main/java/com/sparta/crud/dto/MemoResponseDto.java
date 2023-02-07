@@ -24,6 +24,7 @@ public class MemoResponseDto {
     @Column(nullable = false)
     private String nickName;
     private LocalDateTime createdAt;
+    private LocalDateTime modifiedAt;
 
 
 
@@ -34,5 +35,14 @@ public class MemoResponseDto {
         this.nickName = memo.getNickName();
         this.contents = memo.getContents();
         this.createdAt = memo.getCreatedAt();
+        this.modifiedAt = memo.getModifiedAt();
     }
+//    public MemoResponseDto(MemoRequestDto memoRequestDto) {
+//        //this.username = memo.getUsername();
+//        this.title = memoRequestDto.getTitle();
+//        this.nickName = memoRequestDto.getNickName();
+//        this.contents = memoRequestDto.getContents();
+//        this.createdAt = memoRequestDto.getCreatedAt();
+//        this.modifiedAt = memoRequestDto.getModifiedAt();
+//    }
 }

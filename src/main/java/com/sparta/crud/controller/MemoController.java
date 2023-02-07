@@ -28,10 +28,16 @@ public class MemoController {
         return new ModelAndView("index");
     }
 
-    @PostMapping("api/memos") //post 방식이라 body가 존재하고 그 body 안에 우리가 원하는 값이 있기 때문에
+    /*@PostMapping("api/memos") //post 방식이라 body가 존재하고 그 body 안에 우리가 원하는 값이 있기 때문에
     public Memo createMemo(@RequestBody MemoRequestDto requestDto) {
         return memoService.createMemo(requestDto);
+    }*/
+    @PostMapping("api/memos")
+    public MemoResponseDto createMemo(@RequestBody MemoRequestDto requestDto) {
+        Memo memo = memoService.createMemo(requestDto);
+        return new MemoResponseDto(memo);
     }
+
 
     @GetMapping("/api/memos")
     public List<MemoResponseDto> getMemos() {
