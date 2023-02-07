@@ -65,12 +65,20 @@ public class MemoController {
         Long updatedMemoId = memoService.update(id, requestDto);
         return new ResponseEntity<>(updatedMemoId, HttpStatus.OK);
     }
-    정
 
 
+//    @DeleteMapping("/api/memos/{id}")
+//    public Long deleteMemo(@PathVariable Long id){
+//        return memoService.deleteMemo(id);
+//    }
     @DeleteMapping("/api/memos/{id}")
-    public Long deleteMemo(@PathVariable Long id){
-        return memoService.deleteMemo(id);
+    public ResponseEntity<Long> deleteMemo(@PathVariable Long id, @RequestBody MemoRequestDto requestDto) {
+        String password = memoRepository.findById(id).get().getPassword();
+        if (!password.equals(requestDto.getPassword())) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        Long deletedMemoId = memoService.deleteMemo(id);
+        return new ResponseEntity<>(deletedMemoId, HttpStatus.OK);
     }
 
 
