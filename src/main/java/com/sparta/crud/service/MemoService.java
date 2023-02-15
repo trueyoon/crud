@@ -151,7 +151,7 @@ public class MemoService {
     }
 
     @Transactional
-    public DeleteMemoResponseDto deleteMemo(Long id, MemoRequestDto memoRequestDto, HttpServletRequest request) {
+    public DeleteMemoResponseDto deleteMemo(Long id, HttpServletRequest request) {
         // Request에서 Token 가져오기
         String token = jwtUtil.resolveToken(request);
         Claims claims;
@@ -172,7 +172,7 @@ public class MemoService {
                     () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
             );
 
-            if (memo.getUser().getId() == user.getId() || user.getRole().equals(UserRoleEnum.ADMIN)) {
+            if (user.getRole() == UserRoleEnum.ADMIN || user.getUsername().equals(memo.getUser().getUsername())) {
                 memoRepository.deleteById(id);
                 DeleteMemoResponseDto deleteMemoResponseDto =  new DeleteMemoResponseDto("success", HttpStatus.OK.value());
                 //return id;

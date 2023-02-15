@@ -90,7 +90,7 @@ public class MemoController {
 
     //선택한 게시글 삭제
     @DeleteMapping("/api/memos/{id}")
-    public DeleteMemoResponseDto deleteMemo(@PathVariable Long id, @RequestBody MemoRequestDto requestDto, HttpServletRequest request) {
+    public DeleteMemoResponseDto deleteMemo(@PathVariable Long id, HttpServletRequest request) {
         //String password = memoRepository.findById(id).get().getPassword();
 //        if (!password.equals(requestDto.getPassword())) {
 //            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -107,7 +107,7 @@ public class MemoController {
 //        } else {
 //            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 //        }
-        return memoService.deleteMemo(id, requestDto, request);
+        return memoService.deleteMemo(id, request);
     }
 
 
