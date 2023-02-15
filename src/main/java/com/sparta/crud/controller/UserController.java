@@ -1,9 +1,9 @@
 package com.sparta.crud.controller;
 
-import com.sparta.crud.dto.LoginRequestDto;
-import com.sparta.crud.dto.SignupRequestDto;
+import com.sparta.crud.dto.*;
 import com.sparta.crud.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,15 +20,22 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/signup")
-    public String signup(SignupRequestDto signupRequestDto) {
+    public ResponseEntity<SignupResponseDto> signup(@RequestBody SignupRequestDto signupRequestDto) {
         userService.signup(signupRequestDto);
-        return "redirect:/api/user/login";
+        return ResponseEntity.ok(new SignupResponseDto("success", HttpStatus.OK.value()));
     }
+
+//    @ResponseBody
+//    @PostMapping("/login")
+//    public String login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
+//        userService.login(loginRequestDto, response);
+//        return "success";
+//    }
 
     @ResponseBody
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
+    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
         userService.login(loginRequestDto, response);
-        return "success";
+        return ResponseEntity.ok(new LoginResponseDto("로그인 완료",HttpStatus.OK.value()));
     }
 }

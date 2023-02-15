@@ -21,8 +21,8 @@ public class Memo extends Timestamped {
     private String contents;
     @Column(nullable = false)
     private String title;
-    @Column(nullable = false)
-    private String password;
+//    @Column(nullable = false)
+//    private String password;
     @Column(nullable = false)
     private String username;
 
@@ -30,7 +30,7 @@ public class Memo extends Timestamped {
         //this.username = requestDto.getUsername();
         this.contents = requestDto.getContents();
         this.username = requestDto.getUsername();
-        this.password = requestDto.getPassword();
+        //this.password = requestDto.getPassword();
         this.title = requestDto.getTitle();
     }
 
@@ -38,7 +38,16 @@ public class Memo extends Timestamped {
         //this.username = requestDto.getUsername();
         this.contents = requestDto.getContents();
         this.username = requestDto.getUsername();
-        this.password = requestDto.getPassword();
+        //this.password = requestDto.getPassword();
         this.title = requestDto.getTitle();
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    // Getters and setters
+    public void setUser(User user) {
+        this.user = user;
     }
 }

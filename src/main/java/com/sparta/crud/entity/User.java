@@ -16,13 +16,13 @@ public class User {
     private Long id;
 
     @Column(nullable = false, unique = true)
-//    @Size(min = 4, max = 10)
-//    @Pattern(regexp = "^[a-z0-9]*$")
+    @Size(min = 4, max = 10)
+    @Pattern(regexp = "^[a-z0-9]*$")
     private String username;
 
     @Column(nullable = false)
-//    @Size(min = 8, max = 15)
-//    @Pattern(regexp = "^[a-zA-Z0-9]*$")
+    @Size(min = 8, max = 15)
+    @Pattern(regexp = "^[a-zA-Z0-9]*$")
     private String password;
 
     @Column(nullable = false)
