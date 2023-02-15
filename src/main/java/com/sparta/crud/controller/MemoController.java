@@ -1,7 +1,9 @@
 package com.sparta.crud.controller;
 
+import com.sparta.crud.dto.DeleteMemoResponseDto;
 import com.sparta.crud.dto.MemoRequestDto;
 import com.sparta.crud.dto.MemoResponseDto;
+import com.sparta.crud.dto.SignupResponseDto;
 import com.sparta.crud.entity.Memo;
 import com.sparta.crud.repository.UserRepository;
 import com.sparta.crud.service.MemoService;
@@ -65,18 +67,19 @@ public class MemoController {
 
     //게시글 수정
     @PutMapping("/api/memos/{id}")
-    public ResponseEntity<MemoResponseDto> updateMemo(@PathVariable Long id, @RequestBody MemoRequestDto requestDto, HttpServletRequest request) {
-        Memo memo = memoRepository.findById(id).orElse(null);
-        if (memo == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-//        if (!memo.getPassword().equals(requestDto.getPassword())) {
-//            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    public MemoResponseDto updateMemo(@PathVariable Long id, @RequestBody MemoRequestDto requestDto, HttpServletRequest request) {
+//        Memo memo = memoRepository.findById(id).orElse(null);
+//        if (memo == null) {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 //        }
-        Long updatedMemoId = memoService.update(id, requestDto, request);
-        //return new ResponseEntity<>(updatedMemoId, HttpStatus.OK);
-        memo = memoService.getMemoById(id);
-        return ResponseEntity.ok(new MemoResponseDto(memo));
+////        if (!memo.getPassword().equals(requestDto.getPassword())) {
+////            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+////        }
+//        Long updatedMemoId = memoService.update(id, requestDto, request);
+//        //return new ResponseEntity<>(updatedMemoId, HttpStatus.OK);
+//        memo = memoService.getMemoById(id);
+        //return ResponseEntity.ok(new MemoResponseDto(memo));
+        return memoService.update(id, requestDto, request);
     }
 
 
@@ -87,15 +90,24 @@ public class MemoController {
 
     //선택한 게시글 삭제
     @DeleteMapping("/api/memos/{id}")
-    public ResponseEntity<Long> deleteMemo(@PathVariable Long id, @RequestBody MemoRequestDto requestDto, HttpServletRequest request) {
+    public DeleteMemoResponseDto deleteMemo(@PathVariable Long id, @RequestBody MemoRequestDto requestDto, HttpServletRequest request) {
         //String password = memoRepository.findById(id).get().getPassword();
-        //String password = userRepository.findById(id).get().getPassword();
 //        if (!password.equals(requestDto.getPassword())) {
 //            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 //        }
-        Long deletedMemoId = memoService.deleteMemo(id, request);
-        return new ResponseEntity<>(deletedMemoId, HttpStatus.OK);
-
+//        Long deletedMemoId = memoService.deleteMemo(id, request);
+//        if (deletedMemoId == null) {
+//            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+//        }
+        //return new ResponseEntity<>(deletedMemoId, HttpStatus.OK);
+       // return ResponseEntity.ok(new DeleteMemoResponseDto("success", HttpStatus.OK.value()));
+//        Long deletedMemoId = memoService.deleteMemo(id, request);
+//        if (deletedMemoId != null) {
+//            return ResponseEntity.ok(new DeleteMemoResponseDto("success", HttpStatus.OK.value()));
+//        } else {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+//        }
+        return memoService.deleteMemo(id, requestDto, request);
     }
 
 

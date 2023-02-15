@@ -1,6 +1,7 @@
 package com.sparta.crud.service;
 
 
+import com.sparta.crud.dto.DeleteMemoResponseDto;
 import com.sparta.crud.dto.MemoRequestDto;
 import com.sparta.crud.dto.MemoResponseDto;
 import com.sparta.crud.entity.Memo;
@@ -11,6 +12,7 @@ import com.sparta.crud.repository.MemoRepository;
 import com.sparta.crud.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,6 +67,7 @@ public class MemoService {
         String token = jwtUtil.resolveToken(request);
         Claims claims;
 
+
         if (token != null) {
             // Token verification
             if (jwtUtil.validateToken(token)) {
@@ -109,7 +112,7 @@ public class MemoService {
     }
 
     @Transactional
-    public Long update(Long id, MemoRequestDto requestDto, HttpServletRequest request) {
+    public MemoResponseDto update(Long id, MemoRequestDto requestDto, HttpServletRequest request) {
 
         // Request에서 Token 가져오기
         String token = jwtUtil.resolveToken(request);
@@ -131,9 +134,9 @@ public class MemoService {
             );
             if (memo.getUser().getId() == user.getId() || user.getRole().equals(UserRoleEnum.ADMIN)) {
                 memo.update(requestDto);
-                return memo.getId();
+                return new MemoResponseDto(memo);
             }else {
-                return null;
+                throw new IllegalArgumentException("해당 사용자 혹은 관리자가 아니면 게시글을 수정할 수 없습니다!");
             }
 //
 //        Memo memo = memoRepository.findById(id).orElseThrow(
@@ -142,13 +145,13 @@ public class MemoService {
 
 
 
-        } else {
-            return null;
         }
+        return null;
+
     }
 
     @Transactional
-    public Long deleteMemo(Long id, HttpServletRequest request) {
+    public DeleteMemoResponseDto deleteMemo(Long id, MemoRequestDto memoRequestDto, HttpServletRequest request) {
         // Request에서 Token 가져오기
         String token = jwtUtil.resolveToken(request);
         Claims claims;
@@ -171,9 +174,11 @@ public class MemoService {
 
             if (memo.getUser().getId() == user.getId() || user.getRole().equals(UserRoleEnum.ADMIN)) {
                 memoRepository.deleteById(id);
-                return id;
+                DeleteMemoResponseDto deleteMemoResponseDto =  new DeleteMemoResponseDto("success", HttpStatus.OK.value());
+                //return id;
+                return deleteMemoResponseDto;
             }else {
-                return null;
+                throw new IllegalArgumentException("해당 사용자 혹은 관리자가 아니면 게시글을 삭제할 수 없습니다!");
             }
         } else {
             return null;
