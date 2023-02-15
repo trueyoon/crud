@@ -12,7 +12,7 @@ import javax.persistence.Id;
 import java.time.LocalDateTime;
 
 @Getter
-@JsonPropertyOrder({"title", "nickName", "createdAt", "contents" })
+@JsonPropertyOrder({"title", "username", "createdAt", "contents" })
 public class MemoResponseDto {
 
     /*@Column(nullable = false)
@@ -22,7 +22,7 @@ public class MemoResponseDto {
     @Column(nullable = false)
     private String title;
     @Column(nullable = false)
-    private String nickName;
+    private String username;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
@@ -32,17 +32,9 @@ public class MemoResponseDto {
     public MemoResponseDto(Memo memo) {
         //this.username = memo.getUsername();
         this.title = memo.getTitle();
-        this.nickName = memo.getNickName();
+        this.username = memo.getUsername();
         this.contents = memo.getContents();
         this.createdAt = memo.getCreatedAt();
         this.modifiedAt = memo.getModifiedAt();
     }
-//    public MemoResponseDto(MemoRequestDto memoRequestDto) {
-//        //this.username = memo.getUsername();
-//        this.title = memoRequestDto.getTitle();
-//        this.nickName = memoRequestDto.getNickName();
-//        this.contents = memoRequestDto.getContents();
-//        this.createdAt = memoRequestDto.getCreatedAt();
-//        this.modifiedAt = memoRequestDto.getModifiedAt();
-//    }
 }

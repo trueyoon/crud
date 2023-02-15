@@ -23,22 +23,22 @@ public class MemoController {
     private final MemoService memoService;
     private final MemoRepository memoRepository;
 
+
+
     @GetMapping("/")
     public ModelAndView home() {
         return new ModelAndView("index");
     }
 
-    /*@PostMapping("api/memos") //post 방식이라 body가 존재하고 그 body 안에 우리가 원하는 값이 있기 때문에
-    public Memo createMemo(@RequestBody MemoRequestDto requestDto) {
-        return memoService.createMemo(requestDto);
-    }*/
+
+    //게시글 작성
     @PostMapping("api/memos")
     public MemoResponseDto createMemo(@RequestBody MemoRequestDto requestDto) {
         Memo memo = memoService.createMemo(requestDto);
         return new MemoResponseDto(memo);
     }
 
-
+    //전체 게시글 조회
     @GetMapping("/api/memos")
     public List<MemoResponseDto> getMemos() {
         return memoService.getMemos();
@@ -57,8 +57,10 @@ public class MemoController {
 //            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 //        }
 //        Long updatedMemoId = memoService.update(id, requestDto);
-//        return new ResponseEntity<>(updatedMemoId, HttpStatus.OK);
+//        return new ResponseEntity<>(pduatedMemoId, HttpStatus.OK);
 //    }
+
+    //게시글 수정
     @PutMapping("/api/memos/{id}")
     public ResponseEntity<Long> updateMemo(@PathVariable Long id, @RequestBody MemoRequestDto requestDto) {
         Memo memo = memoRepository.findById(id).orElse(null);
@@ -77,6 +79,8 @@ public class MemoController {
 //    public Long deleteMemo(@PathVariable Long id){
 //        return memoService.deleteMemo(id);
 //    }
+
+    //선택한 게시글 삭제
     @DeleteMapping("/api/memos/{id}")
     public ResponseEntity<Long> deleteMemo(@PathVariable Long id, @RequestBody MemoRequestDto requestDto) {
         String password = memoRepository.findById(id).get().getPassword();
@@ -89,7 +93,7 @@ public class MemoController {
 
 
 
-    //id값에 해당하는 게시글만 출력됨 .
+    //id값에 해당하는 게시글만 조회
     @GetMapping("/api/memos/{id}")
     public ResponseEntity<MemoResponseDto> getMemo(@PathVariable Long id) {
         Memo memo = memoService.getMemoById(id);
