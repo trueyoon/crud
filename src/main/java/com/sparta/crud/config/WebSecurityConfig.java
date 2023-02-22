@@ -34,12 +34,13 @@ public class WebSecurityConfig {
         http.csrf().disable();
 
         http.authorizeRequests().antMatchers("/api/user/**").permitAll()
-                        .antMatchers("api/memos").permitAll()
+                        .antMatchers("/api/memos/**").permitAll()
                         .antMatchers().authenticated()
                 .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
                 // 특정 게시글 조회, 삭제, 수정 : "api/memos/{id}"
                 // 게시글 전체 조회, 작성 : "/api/memos"
+
 
         http.authorizeRequests().anyRequest().authenticated();
 

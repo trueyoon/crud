@@ -10,9 +10,11 @@ import com.sparta.crud.entity.UserRoleEnum;
 import com.sparta.crud.jwt.JwtUtil;
 import com.sparta.crud.repository.MemoRepository;
 import com.sparta.crud.repository.UserRepository;
+import com.sparta.crud.security.UserDetailsImpl;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -62,38 +64,15 @@ public class MemoService {
 //        }
 //    }
     @Transactional
-    public Memo createMemo(MemoRequestDto requestDto, HttpServletRequest request) {
+    public Memo createMemo(MemoRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         // Import Token from Request
-        String token = jwtUtil.resolveToken(request);
-        Claims claims;
-
-
-        if (token != null) {
-            // Token verification
-            if (jwtUtil.validateToken(token)) {
-                // Get user information from token
-                claims = jwtUtil.getUserInfoFromToken(token);
-            } else {
-                throw new IllegalArgumentException("Token Error");
-            }
-            User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
-                    () -> new IllegalArgumentException("User does not exist")
-            );
-
-            Memo memo = new Memo(requestDto);
-            memo.setUser(user);
-            memoRepository.save(memo);
-            return memo;
-        } else {
-            throw new IllegalArgumentException("Token Error");
-        }
+        // String token = jwtUtil.resolveToken(request);
+//        Claims claims;
+        Memo memo = new Memo(requestDto);
+        memoRepository.save(memo);
+        return memo;
     }
 
-
-//    @Transactional(readOnly = true)
-//    public List<Memo> getMemos() {
-//        return memoRepository.findAllByOrderByModifiedAtDesc();
-//    }
 
     @Transactional(readOnly = true)
     public List<MemoResponseDto> getMemos() {
@@ -112,76 +91,30 @@ public class MemoService {
     }
 
     @Transactional
-    public MemoResponseDto update(Long id, MemoRequestDto requestDto, HttpServletRequest request) {
+    public MemoResponseDto update(Long id, MemoRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        // Request에서 Token 가져오기
-        String token = jwtUtil.resolveToken(request);
-        Claims claims;
-        Memo memo = memoRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
-        );
-
-        if (token != null) {
-            // Token 검증
-            if (jwtUtil.validateToken(token)) {
-                // 토큰에서 사용자 정보 가져오기
-                claims = jwtUtil.getUserInfoFromToken(token);
-            } else {
-                throw new IllegalArgumentException("Token Error");
-            }
-            User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
-                    () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
-            );
-            if (memo.getUser().getId() == user.getId() || user.getRole().equals(UserRoleEnum.ADMIN)) {
-                memo.update(requestDto);
-                return new MemoResponseDto(memo);
-            }else {
-                throw new IllegalArgumentException("해당 사용자 혹은 관리자가 아니면 게시글을 수정할 수 없습니다!");
-            }
-//
-//        Memo memo = memoRepository.findById(id).orElseThrow(
-//                () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
-//        );  //db에 내가 수정할 메모가 있는지 확인
-
-
-
+        User user = userDetails.getUser();
+        Memo memo = memoRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
+        if (user.getRole() == UserRoleEnum.ADMIN || user.getUsername().equals(memo.getUser().getUsername())) {
+            memo.update(requestDto);
+            // return StatusResponseDto.success(new requestDto(memo));
+            return new MemoResponseDto(memo);
+        } else {
+            throw new IllegalArgumentException("작성자만 수정가능합니다.");
         }
-        return null;
 
     }
 
     @Transactional
-    public DeleteMemoResponseDto deleteMemo(Long id, HttpServletRequest request) {
-        // Request에서 Token 가져오기
-        String token = jwtUtil.resolveToken(request);
-        Claims claims;
-
-        Memo memo = memoRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("게시글 없음")
-        );
-
-        if (token != null) {
-            // Token 검증
-            if (jwtUtil.validateToken(token)) {
-                // 토큰에서 사용자 정보 가져오기
-                claims = jwtUtil.getUserInfoFromToken(token);
-            } else {
-                throw new IllegalArgumentException("Token Error");
-            }
-            User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
-                    () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
-            );
-
-            if (user.getRole() == UserRoleEnum.ADMIN || user.getUsername().equals(memo.getUser().getUsername())) {
-                memoRepository.deleteById(id);
-                DeleteMemoResponseDto deleteMemoResponseDto =  new DeleteMemoResponseDto("success", HttpStatus.OK.value());
-                //return id;
-                return deleteMemoResponseDto;
-            }else {
-                throw new IllegalArgumentException("해당 사용자 혹은 관리자가 아니면 게시글을 삭제할 수 없습니다!");
-            }
-        } else {
-            return null;
+    public DeleteMemoResponseDto deleteMemo(Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
+        Memo memo = memoRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
+        if (user.getRole() == UserRoleEnum.ADMIN || user.getUsername().equals(memo.getUser().getUsername())) {
+            memoRepository.deleteById(id);
+            DeleteMemoResponseDto deleteMemoResponseDto =  new DeleteMemoResponseDto("success", HttpStatus.OK.value());
+            //return id;
+            return deleteMemoResponseDto;
+        }else {
+            throw new IllegalArgumentException("해당 사용자 혹은 관리자가 아니면 게시글을 삭제할 수 없습니다!");
         }
-    }
 }
