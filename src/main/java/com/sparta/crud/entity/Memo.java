@@ -2,6 +2,8 @@ package com.sparta.crud.entity;
 
 
 import com.sparta.crud.dto.MemoRequestDto;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +12,7 @@ import javax.persistence.*;
 @Getter
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 public class Memo extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,6 +28,13 @@ public class Memo extends Timestamped {
 //    private String password;
     @Column(nullable = false)
     private String username;
+
+    @Builder
+    public Memo(MemoRequestDto requestDto, User user){
+        this.title = requestDto.getTitle();
+        this.contents = requestDto.getContents();
+        this.username = user.getUsername();
+    }
 
     public Memo(MemoRequestDto requestDto) {
         //this.username = requestDto.getUsername();

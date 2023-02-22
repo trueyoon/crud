@@ -68,7 +68,7 @@ public class MemoService {
         // Import Token from Request
         // String token = jwtUtil.resolveToken(request);
 //        Claims claims;
-        Memo memo = new Memo(requestDto);
+        Memo memo = new Memo(requestDto, userDetails.getUser());
         memoRepository.save(memo);
         return memo;
     }
