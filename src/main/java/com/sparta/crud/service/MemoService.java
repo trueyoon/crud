@@ -111,10 +111,11 @@ public class MemoService {
         Memo memo = memoRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
         if (user.getRole() == UserRoleEnum.ADMIN || user.getUsername().equals(memo.getUser().getUsername())) {
             memoRepository.deleteById(id);
-            DeleteMemoResponseDto deleteMemoResponseDto =  new DeleteMemoResponseDto("success", HttpStatus.OK.value());
+            DeleteMemoResponseDto deleteMemoResponseDto = new DeleteMemoResponseDto("success", HttpStatus.OK.value());
             //return id;
             return deleteMemoResponseDto;
-        }else {
+        } else {
             throw new IllegalArgumentException("해당 사용자 혹은 관리자가 아니면 게시글을 삭제할 수 없습니다!");
         }
+    }
 }
