@@ -21,10 +21,10 @@ public class MemoResponseDto {
     private String contents;
     @Column(nullable = false)
     private String title;
-    @Column(nullable = false)
-    private String username;
+    private String userName;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
+    private int likeCount;
 
 
 
@@ -32,9 +32,9 @@ public class MemoResponseDto {
     public MemoResponseDto(Memo memo) {
         //this.username = memo.getUsername();
         this.title = memo.getTitle();
-        this.username = memo.getUsername();
         this.contents = memo.getContents();
         this.createdAt = memo.getCreatedAt();
         this.modifiedAt = memo.getModifiedAt();
+        this.likeCount = memo.getLikeCount();
     }
 }

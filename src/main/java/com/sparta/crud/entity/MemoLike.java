@@ -18,4 +18,9 @@ public class MemoLike {
 
     @ManyToOne
     private User user;
+
+    public MemoLike(Memo memo, User user){
+        this.memo = memo;
+        this.user = user;
+    }
 }

@@ -12,4 +12,5 @@ public interface MemoRepository extends JpaRepository<Memo, Long> { //db와 연�
     List<Memo> findAllByOrderByCreatedAtDesc();
     List<Memo> findById(int id);
     Optional<Memo> findByIdAndUserId(Long id, Long userId);
+
 }

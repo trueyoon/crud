@@ -78,31 +78,18 @@ public class MemoController {
     //선택한 게시글 삭제
     @DeleteMapping("/api/memos/{id}")
     public DeleteMemoResponseDto deleteMemo(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        //String password = memoRepository.findById(id).get().getPassword();
-//        if (!password.equals(requestDto.getPassword())) {
-//            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-//        }
-//        Long deletedMemoId = memoService.deleteMemo(id, request);
-//        if (deletedMemoId == null) {
-//            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-//        }
-        //return new ResponseEntity<>(deletedMemoId, HttpStatus.OK);
-       // return ResponseEntity.ok(new DeleteMemoResponseDto("success", HttpStatus.OK.value()));
-//        Long deletedMemoId = memoService.deleteMemo(id, request);
-//        if (deletedMemoId != null) {
-//            return ResponseEntity.ok(new DeleteMemoResponseDto("success", HttpStatus.OK.value()));
-//        } else {
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-//        }
         return memoService.deleteMemo(id, userDetails);
     }
-
-
 
     //id값에 해당하는 게시글만 조회
     @GetMapping("/api/memos/{id}")
     public ResponseEntity<MemoResponseDto> getMemo(@PathVariable Long id) {
         Memo memo = memoService.getMemoById(id);
         return ResponseEntity.ok(new MemoResponseDto(memo));
+    }
+
+    @PostMapping("api/memos/like/{id}")
+    public MemoResponseDto likeMemo(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return memoService.likeMemo(id, userDetails);
     }
 }

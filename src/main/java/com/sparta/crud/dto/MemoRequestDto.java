@@ -11,6 +11,7 @@ public class MemoRequestDto {
     private String title;
     private String contents;
     //cprivate String password;
-    private LocalDateTime createdAt;
-    private LocalDateTime modifiedAt;
+//    private LocalDateTime createdAt;
+//    private LocalDateTime modifiedAt;
+
 }

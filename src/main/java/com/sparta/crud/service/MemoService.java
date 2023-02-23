@@ -5,9 +5,11 @@ import com.sparta.crud.dto.DeleteMemoResponseDto;
 import com.sparta.crud.dto.MemoRequestDto;
 import com.sparta.crud.dto.MemoResponseDto;
 import com.sparta.crud.entity.Memo;
+import com.sparta.crud.entity.MemoLike;
 import com.sparta.crud.entity.User;
 import com.sparta.crud.entity.UserRoleEnum;
 import com.sparta.crud.jwt.JwtUtil;
+import com.sparta.crud.repository.MemoLikeRepository;
 import com.sparta.crud.repository.MemoRepository;
 import com.sparta.crud.repository.UserRepository;
 import com.sparta.crud.security.UserDetailsImpl;
@@ -21,54 +23,28 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @Service
 @RequiredArgsConstructor
 public class MemoService {
 
     private final MemoRepository memoRepository;
+    private final MemoLikeRepository memoLikeRepository;
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
 
-
-/*    @Transactional
-    public Memo createMemo(MemoRequestDto requestDto) {
-        Memo memo = new Memo(requestDto);
-        memoRepository.save(memo);
-        return memo;
-    }*/
-
-    //    @Transactional
-//    public Memo createMemo(MemoRequestDto requestDto, HttpServletRequest request) {
-//        // Request에서 Token 가져오기
-//        String token = jwtUtil.resolveToken(request);
-//        Claims claims;
-//
-//        if (token != null) {
-//            // Token 검증
-//            if (jwtUtil.validateToken(token)) {
-//                // 토큰에서 사용자 정보 가져오기
-//                claims = jwtUtil.getUserInfoFromToken(token);
-//            } else {
-//                throw new IllegalArgumentException("Token Error");
-//            }
-//            User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
-//                    () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
-//            );
-//
-//            Memo memo = new Memo(requestDto);
-//            memoRepository.save(memo);
-//            return memo;
-//        } else {
-//            return null;
-//        }
-//    }
     @Transactional
     public Memo createMemo(MemoRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         // Import Token from Request
         // String token = jwtUtil.resolveToken(request);
 //        Claims claims;
-        Memo memo = new Memo(requestDto, userDetails.getUser());
+//        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(
+//                () -> new IllegalArgumentException("user not found with id: " + userDetails.getUsername())
+//        );
+        Memo memo = new Memo(requestDto, user);
         memoRepository.save(memo);
         return memo;
     }
@@ -117,5 +93,24 @@ public class MemoService {
         } else {
             throw new IllegalArgumentException("해당 사용자 혹은 관리자가 아니면 게시글을 삭제할 수 없습니다!");
         }
+    }
+
+    @Transactional
+    public MemoResponseDto likeMemo(Long id, UserDetailsImpl userDetails){
+        Memo memo = memoRepository.findById(id).orElseThrow(
+                () -> new NullPointerException("게시글 없음")
+        );
+        Optional<MemoLike> optionalMemoLike = memoLikeRepository.findByMemoAndUser(memo, userDetails.getUser());
+        if (optionalMemoLike.isPresent()){
+            memoLikeRepository.deleteById(optionalMemoLike.get().getId());
+//            long l = memo.getLikeCount() - 1;
+//            memoLikeRepository.save(memo);
+            memo.setLikeCount(memo.getLikeCount()-1);
+            return new MemoResponseDto(memo);
+        }
+
+        memoLikeRepository.save(new MemoLike(memo, userDetails.getUser()));
+        memo.setLikeCount(memo.getLikeCount()+1);
+        return new MemoResponseDto(memo);
     }
 }
