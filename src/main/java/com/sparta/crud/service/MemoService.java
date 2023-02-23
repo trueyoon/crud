@@ -37,7 +37,7 @@ public class MemoService {
     private final JwtUtil jwtUtil;
 
     @Transactional
-    public Memo createMemo(MemoRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public MemoResponseDto createMemo(MemoRequestDto requestDto, User user) {
         // Import Token from Request
         // String token = jwtUtil.resolveToken(request);
 //        Claims claims;
@@ -46,7 +46,7 @@ public class MemoService {
 //        );
         Memo memo = new Memo(requestDto, user);
         memoRepository.save(memo);
-        return memo;
+        return new MemoResponseDto(memo);
     }
 
 

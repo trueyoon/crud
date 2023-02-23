@@ -40,8 +40,7 @@ public class MemoController {
     //게시글 작성
     @PostMapping("api/memos")
     public MemoResponseDto createMemo(@RequestBody MemoRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){//HttpServletRequest request) {
-        Memo memo = memoService.createMemo(requestDto, userDetails);
-        return new MemoResponseDto(memo);
+        return memoService.createMemo(requestDto, userDetails.getUser());
     }
 
     //전체 게시글 조회

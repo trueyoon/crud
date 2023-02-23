@@ -17,9 +17,9 @@ public class MemoResponseDto {
 
     /*@Column(nullable = false)
     private String username;*/
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private String contents;
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private String title;
     private String userName;
     private LocalDateTime createdAt;
@@ -31,6 +31,7 @@ public class MemoResponseDto {
 
     public MemoResponseDto(Memo memo) {
         //this.username = memo.getUsername();
+        this.userName = memo.getUser().getUsername();
         this.title = memo.getTitle();
         this.contents = memo.getContents();
         this.createdAt = memo.getCreatedAt();

@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Getter
 public class MemoRequestDto {
-    private String username;
+//    private String username;
     private String title;
     private String contents;
     //cprivate String password;
