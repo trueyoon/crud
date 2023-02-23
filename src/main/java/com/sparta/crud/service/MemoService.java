@@ -20,6 +20,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,12 +39,6 @@ public class MemoService {
 
     @Transactional
     public MemoResponseDto createMemo(MemoRequestDto requestDto, User user) {
-        // Import Token from Request
-        // String token = jwtUtil.resolveToken(request);
-//        Claims claims;
-//        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(
-//                () -> new IllegalArgumentException("user not found with id: " + userDetails.getUsername())
-//        );
         Memo memo = new Memo(requestDto, user);
         memoRepository.save(memo);
         return new MemoResponseDto(memo);

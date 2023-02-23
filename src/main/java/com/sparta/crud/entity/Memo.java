@@ -3,6 +3,7 @@ package com.sparta.crud.entity;
 
 import com.sparta.crud.dto.MemoRequestDto;
 import lombok.*;
+import org.springframework.core.annotation.Order;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -27,6 +28,11 @@ public class Memo extends Timestamped {
 
     @Column
     private int likeCount;
+
+    //fetch = FetchType.Lazy ???
+    @OneToMany(mappedBy = "memo", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OrderBy("createdAt desc")
+    List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "memo", cascade = CascadeType.REMOVE)
     List<MemoLike> likes = new ArrayList<>();

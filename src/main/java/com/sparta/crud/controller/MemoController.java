@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -38,7 +39,8 @@ public class MemoController {
 
 
     //게시글 작성
-    @PostMapping("api/memos")
+    @PostMapping("/api/memos")
+
     public MemoResponseDto createMemo(@RequestBody MemoRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){//HttpServletRequest request) {
         return memoService.createMemo(requestDto, userDetails.getUser());
     }
