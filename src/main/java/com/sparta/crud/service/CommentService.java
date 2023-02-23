@@ -3,16 +3,17 @@ package com.sparta.crud.service;
 import com.sparta.crud.dto.CommentRequestDto;
 import com.sparta.crud.dto.CommentResponseDto;
 import com.sparta.crud.dto.DeleteMemoResponseDto;
-import com.sparta.crud.entity.Comment;
-import com.sparta.crud.entity.Memo;
-import com.sparta.crud.entity.User;
-import com.sparta.crud.entity.UserRoleEnum;
+import com.sparta.crud.entity.*;
+import com.sparta.crud.repository.CommentLikeRepository;
 import com.sparta.crud.repository.CommentRepository;
 import com.sparta.crud.repository.MemoRepository;
 import com.sparta.crud.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,8 +21,10 @@ public class CommentService {
 
     private final MemoRepository memoRepository;
     private final CommentRepository commentRepository;
+    private final CommentLikeRepository commentLikeRepository;
 
 
+    @Transactional
     public CommentResponseDto createComment(Long id, CommentRequestDto commentRequestDto, UserDetailsImpl userDetails) {
         Memo memo = memoRepository.findById(id).orElseThrow(
                 () -> new NullPointerException("존재하지 않는 게시글입니다.")
@@ -31,6 +34,7 @@ public class CommentService {
         return new CommentResponseDto(comment);
     }
 
+    @Transactional
     public CommentResponseDto updateComment(Long id, CommentRequestDto commentRequestDto, UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
         Comment comment = commentRepository.findById(id).orElseThrow(
@@ -46,6 +50,7 @@ public class CommentService {
         }
     }
 
+    @Transactional
     public DeleteMemoResponseDto deleteComment(Long id, UserDetailsImpl userDetails){
         User user = userDetails.getUser();
         Comment comment = commentRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("댓글이 존재하지 않습니다."));
@@ -57,5 +62,21 @@ public class CommentService {
         } else {
             throw new IllegalArgumentException("작성자 또는 관리자만 삭제할 수 있습니다.");
         }
+    }
+
+    @Transactional
+    public CommentResponseDto likeComment(Long id, UserDetailsImpl userDetails) {
+        Comment comment = commentRepository.findById(id).orElseThrow(
+                ()->new NullPointerException("댓글이 존재하지 않습니다.")
+        );
+        Optional<CommentLike> commentLike = commentLikeRepository.findByCommentAndUser(comment, userDetails.getUser());
+        if (commentLike.isPresent()){
+            commentLikeRepository.deleteById(commentLike.get().getId());
+            comment.setLikeCount(comment.getLikeCount()-1);
+            return new CommentResponseDto(comment);
+        }
+        commentLikeRepository.save(new CommentLike(comment, userDetails.getUser()));
+        comment.setLikeCount(comment.getLikeCount()+1);
+        return new CommentResponseDto(comment);
     }
 }

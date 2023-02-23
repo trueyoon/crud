@@ -56,25 +56,8 @@ public class MemoController {
     //게시글 수정
     @PutMapping("/api/memos/{id}")
     public MemoResponseDto updateMemo(@PathVariable Long id, @RequestBody MemoRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        Memo memo = memoRepository.findById(id).orElse(null);
-//        if (memo == null) {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-////        if (!memo.getPassword().equals(requestDto.getPassword())) {
-////            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-////        }
-//        Long updatedMemoId = memoService.update(id, requestDto, request);
-//        //return new ResponseEntity<>(updatedMemoId, HttpStatus.OK);
-//        memo = memoService.getMemoById(id);
-        //return ResponseEntity.ok(new MemoResponseDto(memo));
         return memoService.update(id, requestDto, userDetails);
     }
-
-
-//    @DeleteMapping("/api/memos/{id}")
-//    public Long deleteMemo(@PathVariable Long id){
-//        return memoService.deleteMemo(id);
-//    }
 
     //선택한 게시글 삭제
     @DeleteMapping("/api/memos/{id}")

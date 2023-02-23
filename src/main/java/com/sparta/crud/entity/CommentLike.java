@@ -8,21 +8,21 @@ import javax.persistence.*;
 @Getter
 @Entity
 @NoArgsConstructor
-public class MemoLike {
+public class CommentLike {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "memo_id")
-    private Memo memo;
+    @JoinColumn(name = "comment_id")
+    private Comment comment;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    public MemoLike(Memo memo, User user){
-        this.memo = memo;
+    public CommentLike(Comment comment, User user){
+        this.comment = comment;
         this.user = user;
     }
 }
